@@ -22,7 +22,7 @@ For example:
 - `91212129` produces `9` because the only digit that matches the next one is the last digit, `9`.
 What is the solution to your captcha?
 
-Your puzzle answer was 1223.
+Your puzzle answer was `1223`.
 
 ## Part Two
 
@@ -39,4 +39,4 @@ For example:
 - `12131415` produces `4`.
 What is the solution to your new captcha?
 
-Your puzzle answer was 1284.
+Your puzzle answer was `1284`.
