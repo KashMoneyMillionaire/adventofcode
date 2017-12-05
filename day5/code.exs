@@ -17,22 +17,22 @@ defmodule Day5 do
             iterationCount
         else
 
-            # (0) 3 0 1 -3      1
-            # (1) 3 0 1 -3      2
-            # 2 (3) 0 1 -3      3
-            # 1 4 0 1 (-3)      4
-            # 1 (4) 0 1 -2      5
-            # exit
+            # (0) 3 0 1 -3      0
+            # (1) 3 0 1 -3      1
+            # 2 (3) 0 1 -3      2
+            # 1 4 0 1 (-3)      3
+            # 1 (4) 0 1 -2      4
+            # exit              5
 
             cond do
                 jumpSize == 0 ->
                     jump(front, currentItem + 1, back, currentItem, iterationCount + 1)
                 jumpSize < 0 -> 
                     {f, m, b} = three_parts(front, jumpSize)
-                    jump(f, m, b ++ back, jumpSize - 1, iterationCount)
+                    jump(f, m, b ++ back, 0, iterationCount)
                 jumpSize > 0 ->
                     {f, m, b} = three_parts(back, jumpSize)
-                    jump(front ++ f, m, b, jumpSize + 1, iterationCount)
+                    jump(front ++ f, m, b, 0, iterationCount)
             end
         end
     end
