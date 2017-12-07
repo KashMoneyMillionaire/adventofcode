@@ -1,4 +1,4 @@
-defmodule MemoryBanks do
+defmodule Day6 do
     def count_cycles(blocks) do
         blocks
             |> redistributions
@@ -40,10 +40,10 @@ input = "input.txt"
 
 # Part one
 {length, cycleNotice} = input
-    |> MemoryBanks.count_cycles
+    |> Day6.count_cycles
     |> IO.inspect
 
 # Part two
 cycleNotice
-    |> MemoryBanks.count_cycles
+    |> Day6.count_cycles
     |> IO.inspect
