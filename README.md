@@ -1,4 +1,5 @@
-# adventofcode-2017
-http://adventofcode.com/2017
+# adventofcode
+http://adventofcode.com
 
 Elixir solutions for 2017 Advent of Code
+Elixir solutions for 2018 Advent of Code
