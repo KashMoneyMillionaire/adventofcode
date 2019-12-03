@@ -5,7 +5,8 @@ open System
 
 [<EntryPoint>]
 let main argv =
-    let input = Ut.SplitLinesSplitOn(',')
+    let input = Ut.SplitLinesSplitOn (',')
+    wire1 = input
     printfn "%A" input
     0 // return an integer exit code
     

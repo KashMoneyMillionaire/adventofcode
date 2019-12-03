@@ -1,5 +1,5 @@
 ﻿namespace Utilities
 
 module Ut = 
-    let SplitLinesSplitOn splitBy = 
-        System.IO.File.ReadLines("input.txt") |> List.map (fun x -> x.Split(splitBy));
+    let SplitLinesSplitOn (splitBy: char) = 
+        System.IO.File.ReadLines("input.txt") |> Seq.map (fun x -> x.Split(splitBy));
