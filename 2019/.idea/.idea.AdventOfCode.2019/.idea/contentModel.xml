@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Projects\adventofcode\2019" t="IncludeFlat">
+      <e p="AdventOfCode.2019.sln" t="IncludeFlat" />
+      <e p="day-03\Day03" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Day03.fsproj" t="IncludeRecursive" />
+        <e p="input.txt" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Program.fs" t="Include" />
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Utilities" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Library.fs" t="Include" />
+        <e p="obj" t="ExcludeRecursive" />
+        <e p="Utilities.fsproj" t="IncludeRecursive" />
+      </e>
+    </e>
+    <e p="C:\Users\KashL\.Rider2019.2\config\scratches" t="IncludeRecursive" />
+    <e p="C:\Users\KashL\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\KashL\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_AdventOfCode.2019.1985372345.00" t="ExcludeRecursive" />
+  </component>
+</project>

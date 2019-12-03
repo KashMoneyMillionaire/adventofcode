@@ -1,0 +1,14 @@
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\Day03.deps.json
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\Day03.runtimeconfig.json
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\Day03.runtimeconfig.dev.json
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\Day03.dll
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\Day03.pdb
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\Utilities.dll
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\Utilities.pdb
+C:\Projects\adventofcode\2019\day-03\Day03\obj\Debug\netcoreapp2.2\Day03.fsprojAssemblyReference.cache
+C:\Projects\adventofcode\2019\day-03\Day03\obj\Debug\netcoreapp2.2\Day03.AssemblyInfoInputs.cache
+C:\Projects\adventofcode\2019\day-03\Day03\obj\Debug\netcoreapp2.2\Day03.AssemblyInfo.fs
+C:\Projects\adventofcode\2019\day-03\Day03\obj\Debug\netcoreapp2.2\Day03.fsproj.CopyComplete
+C:\Projects\adventofcode\2019\day-03\Day03\obj\Debug\netcoreapp2.2\Day03.dll
+C:\Projects\adventofcode\2019\day-03\Day03\obj\Debug\netcoreapp2.2\Day03.pdb
+C:\Projects\adventofcode\2019\day-03\Day03\bin\Debug\netcoreapp2.2\input.txt

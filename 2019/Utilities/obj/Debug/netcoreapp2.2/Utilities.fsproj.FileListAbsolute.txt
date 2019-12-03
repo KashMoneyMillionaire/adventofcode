@@ -1,0 +1,8 @@
+C:\Projects\adventofcode\2019\Utilities\obj\Debug\netcoreapp2.2\Utilities.fsprojAssemblyReference.cache
+C:\Projects\adventofcode\2019\Utilities\obj\Debug\netcoreapp2.2\Utilities.AssemblyInfoInputs.cache
+C:\Projects\adventofcode\2019\Utilities\obj\Debug\netcoreapp2.2\Utilities.AssemblyInfo.fs
+C:\Projects\adventofcode\2019\Utilities\bin\Debug\netcoreapp2.2\Utilities.deps.json
+C:\Projects\adventofcode\2019\Utilities\bin\Debug\netcoreapp2.2\Utilities.dll
+C:\Projects\adventofcode\2019\Utilities\bin\Debug\netcoreapp2.2\Utilities.pdb
+C:\Projects\adventofcode\2019\Utilities\obj\Debug\netcoreapp2.2\Utilities.dll
+C:\Projects\adventofcode\2019\Utilities\obj\Debug\netcoreapp2.2\Utilities.pdb
