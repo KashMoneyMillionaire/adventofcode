@@ -1,4 +1,5 @@
-﻿// Learn more about F# at http://fsharp.org
+﻿
+module Day03
 
 open Utilities.Ut
 open System
@@ -65,9 +66,8 @@ let rec iterate (current: Coordinate) (hd::tail: Movement list) =
         | 0 -> Seq.empty<Coordinate>
         | _ -> tail |> iterate (getNewCoordinate(hd, current))
 
-[<EntryPoint>]
-let main argv =
-    let input = SplitLinesSplitOn (',')
+let solve =
+    let input = SplitLinesSplitOn "Day03" ','
     let dir1 = input |> Seq.item(0) |> mapAsMovement |> Seq.toList
     let dir2 = input |> Seq.item(1) |> mapAsMovement |> Seq.toList
     let wire1 = dir1 |> iterate(origin) |> set
@@ -82,6 +82,4 @@ let main argv =
     let a = z |> Seq.map(fun x -> x(dir1))
     let b = z |> Seq.map(fun x -> x(dir2))
     let lengths = Seq.zip a b
-    printfn "Part 1: %A" (lengths |> Seq.map(fun (l, r) -> l + r) |> Seq.min)    
-    
-    0
+    printfn "Part 2: %A" (lengths |> Seq.map(fun (l, r) -> l + r) |> Seq.min)    
