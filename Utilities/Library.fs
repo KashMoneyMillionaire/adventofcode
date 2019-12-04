@@ -9,3 +9,5 @@ module Ut =
     let charsAsInt : char list -> int  = fun (chars: char list) -> 
         let str = new System.String(List.toArray(chars)) 
         stringAsInt(str)
+
+    let numToChars x = x |> string |> Seq.toList
