@@ -7,6 +7,7 @@ let rec prompt forever =
     
     match Console.ReadLine() with
                 | "1" -> Day01.solve()
+                | "2" -> Day02.solve()
                 | _ -> printfn "Could not find day"
 
     prompt forever

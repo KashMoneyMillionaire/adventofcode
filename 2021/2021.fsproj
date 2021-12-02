@@ -6,13 +6,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Day01\Solution.fs" />
+        <Compile Include="Day01\Day01.fs" />
         <Content Include="Day*\*.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Compile Include="Program.fs" />
+        <Compile Include="Day02\Day02.fs" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+    
     <ItemGroup>
         <ProjectReference Include="..\Utilities\Utilities.fsproj" />
     </ItemGroup>
