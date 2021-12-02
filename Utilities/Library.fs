@@ -27,18 +27,8 @@ module Ut =
 
     let logAndContinue iter map = iter |> Seq.map (logAndReturn map)
 
-    let tupwise (source: seq<'T>) =
-        seq {
-            use ie = source.GetEnumerator()
+    let pairwise (offset: int) (source: seq<'T>) =
+        let start = seq { yield! source }
+        let next = seq { yield! source } |> Seq.skip offset
 
-            ie.MoveNext() |> ignore
-            let mutable one = ie.Current
-            ie.MoveNext() |> ignore
-            let mutable two = ie.Current
-
-            while ie.MoveNext() do
-                let three = ie.Current
-                yield (one, two, three)
-                one <- two
-                two <- three
-        }
+        Seq.zip start next

@@ -8,15 +8,13 @@ let solve () =
 
     let solution1 =
         input
-        |> Seq.pairwise
+        |> pairwise 1
         |> Seq.filter (fun (x, y) -> x < y)
         |> Seq.length
 
     let solution2 =
         input
-        |> tupwise
-        |> Seq.map (fun (x, y, z) -> x + y + z)
-        |> Seq.pairwise
+        |> pairwise 3
         |> Seq.filter (fun (x, y) -> x < y)
         |> Seq.length
 
