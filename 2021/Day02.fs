@@ -1,6 +1,6 @@
 ﻿module Day02
 
-open Utilities.Ut
+open Utilities
 
 type MovementDirection =
     | Up

@@ -1,6 +1,6 @@
 ﻿module Day01
 
-open Utilities.Ut
+open Utilities
 
 let solve () =
     let input =
