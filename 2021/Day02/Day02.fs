@@ -15,13 +15,11 @@ let solve () =
     let input = ReadInputLines "Day02" "input.txt"
 
     let inputParser (line: string) =
-        let [| dir; len |] = line.Split(" ")
-        let numLen = int len
-        match dir with
-        | "up" -> { Direction = Up; Length = numLen }
-        | "forward" -> { Direction = Forward; Length = numLen }
-        | "down" -> { Direction = Down; Length = numLen }
-        | unknownDirection -> failwith $"Direction unknown: %A{unknownDirection}"
+        match line.Split(" ") with
+        | [|"up"; len|] -> { Direction = Up; Length = int len }
+        | [|"forward"; len|] -> { Direction = Forward; Length = int len }
+        | [|"down"; len|] -> { Direction = Down; Length = int len }
+        | _ -> failwith "Direction unknown"
 
     let basicMove (x, y) (command: SubMovementCommand) =
         match command with
