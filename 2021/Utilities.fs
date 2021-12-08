@@ -1,6 +1,7 @@
 ﻿module Utilities
 
 open System
+open System.Text.RegularExpressions
 
 let SplitLinesSplitOn (day: string) (splitBy: char) =
     System.IO.File.ReadLines("input/" + day + "/input.txt")
@@ -66,3 +67,18 @@ let inline third4 (_, _, x, _) = x
 let inline fourth4 (_, _, _, x) = x
 
 let mapWith (mapper: 'a -> 'b) (items: 'a seq) = items |> Seq.map (fun item -> (item, mapper item))
+
+let (|ParseRegex|_|) regex str =
+    let m = Regex(regex).Match(str)
+
+    if m.Success then
+        Some(List.tail [ for x in m.Groups -> x.Value ])
+    else
+        None
+        
+let (|Integer|_|) (str: string) =
+   let mutable intVal = 0
+   if Int32.TryParse(str, &intVal) then Some(intVal)
+   else None
+
+let inline median items = items |> Array.sort |> (fun arr -> arr.[items.Length / 2])
