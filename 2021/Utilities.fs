@@ -1,6 +1,7 @@
 ﻿module Utilities
 
 open System
+open System.Collections.Generic
 
 let SplitLinesSplitOn (day: string) (splitBy: char) =
     System.IO.File.ReadLines("input/" + day + "/input.txt")
@@ -59,4 +60,16 @@ let getRow c (matrix: _[][]) =
     matrix
     |> Array.skip c
     |> Array.head
-    
+   
+let seqDict (src:seq<'a * 'b>) = 
+    let d = new Dictionary<'a, 'b>()
+    for k,v in src do
+        d.Add(k,v)
+    d
+
+// get a seq of key-value pairs for easy iteration with for (k,v) in d do...
+let pairs (d:Dictionary<'a, 'b>) =
+    seq {
+        for kv in d do
+            yield (kv.Key, kv.Value)
+    }
