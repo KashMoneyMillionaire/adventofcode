@@ -84,11 +84,6 @@ let (|Integer|_|) (str: string) =
 
 let inline median items = items |> Array.sort |> (fun arr -> arr.[items.Length / 2])
 
-let getRow c (matrix: _[][]) =
-    matrix
-    |> Array.skip c
-    |> Array.head
-   
 let seqDict (src:seq<'a * 'b>) = 
     let d = new Dictionary<'a, 'b>()
     for k,v in src do

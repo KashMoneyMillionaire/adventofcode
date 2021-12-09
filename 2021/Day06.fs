@@ -28,9 +28,8 @@ let solve () =
     let fishSpawnRates =
         ReadInputLines "Day06" "test.txt"
         |> Seq.head
-        |> split [|','|]
+        |> split ","
         |> Seq.map int
-//        seq { 3 }
         |> Seq.countBy id
         |> Seq.map (fun (spawnTime, fishCount) -> (*) (getOverallSpawnTime spawnTime) fishCount)
         |> Seq.sum
