@@ -33,8 +33,8 @@ let pairwise (offset: int) (source: seq<'T>) =
 
     Seq.zip start next
 
-let split (splitOn: string) (str: string) =
-    str.Split(splitOn, StringSplitOptions.RemoveEmptyEntries)
+let split (splitOn: string) (toSplit: string) =
+    toSplit.Split(splitOn, StringSplitOptions.RemoveEmptyEntries)
 
 type Binary =
     static member parse(str) = Convert.ToInt32(str, 2)
@@ -54,7 +54,6 @@ let countBits (bits: seq<char>) =
 let startsWith check items = Seq.head items = check
 
 let getColumn c (matrix: _ [] []) = matrix |> Array.map (fun x -> x.[c])
-
 
 let getRow c (matrix: _ [] []) = matrix |> Array.skip c |> Array.head
 
@@ -96,3 +95,17 @@ let pairs (d:Dictionary<'a, 'b>) =
         for kv in d do
             yield (kv.Key, kv.Value)
     }
+
+let paired twoItemSeq =
+    (twoItemSeq |> Seq.head, twoItemSeq |> Seq.skip 1 |> Seq.head)
+    
+let splitPairs pairs =
+    let firsts = pairs |> Seq.map fst
+    let seconds = pairs |> Seq.map snd
+    (firsts, seconds)
+    
+let mapDeep func seqSeq =
+    seqSeq |> Seq.map (Seq.map func)
+
+let mapMany func seqSeq =
+    seqSeq |> Seq.collect func
