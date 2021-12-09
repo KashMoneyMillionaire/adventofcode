@@ -9,7 +9,10 @@ let rec prompt forever =
                 | "1" -> Day01.solve()
                 | "2" -> Day02.solve()
                 | "3" -> Day03.solve()
+                | "4" -> Day04.solve()
+                | "5" -> Day05.solve()
                 | "6" -> Day06.solve()
+                | "7" -> Day07.solve()
                 | _ -> printfn "Could not find day"
 
     prompt forever
