@@ -1,124 +1,102 @@
-﻿module Day09
+﻿module Day08
 
 open Utilities
 
-type Point(value: int) =
-
-    let mutable top = None
-    let mutable bottom = None
-    let mutable left = None
-    let mutable right = None
-    let mutable counted = false
-
-    member this.Val = value
-
-    member this.Top
-        with get () = top
-        and set value = top <- value
-
-    member this.Bottom
-        with get () = bottom
-        and set value = bottom <- value
-
-    member this.Left
-        with get () = left
-        and set value = left <- value
-
-    member this.Right
-        with get () = right
-        and set value = right <- value
-    member this.Counted
-        with get () = counted
-        and set value = counted <- value
+type Display(letters: string, contains: Display seq) =
+    member this.Segments = Seq.toArray letters
+    member this.Length = this.Segments.Length
+    member this.ContainingDisplays = contains
+    member this.Contains display =
+        Seq.contains display contains
+    
+    new(letters: string) =
+        Display(letters, Seq.empty)
 
 let solve () =
 
-    let buildPoint i = Point(i)
+    let ONE = Display("cf")
+    let SEVEN = Display("acf", seq { ONE; })
+    let ZERO = Display("abcefg", seq { ONE; SEVEN; })
+    
+    let TWO = Display("acdeg")
+    let THREE = Display("acdfg", seq { ONE; })
+    let FOUR = Display("bcdf", seq { ONE; })
+    let FIVE = Display("abdfg")
+    let SIX = Display("abdefg", seq { FIVE; })
+    let NINE = Display("abcdfg", seq { THREE; FOUR; FIVE; })
+    let EIGHT = Display("abcdefg", seq { ZERO; ONE; TWO; THREE; FOUR; FIVE; SIX; SEVEN; NINE; })
 
-    let pairRow (points: Point seq) =
+    let nums = seq {
+        yield! EIGHT.ContainingDisplays; EIGHT
+    }
+    
+    let uniqueLengths =
         seq {
-            use ie = points.GetEnumerator()
-
-            if ie.MoveNext() then
-                let mutable prev = ie.Current
-
-                while ie.MoveNext() do
-                    let mutable curr = ie.Current
-
-                    prev.Right <- Some curr
-                    curr.Left <- Some prev
-                    yield prev
-
-                    prev <- curr
-
-                yield prev
+            2; 3; 4; 7
         }
+//
+//
+//    let findPossible (patterns: string seq) =
+//        patterns
+//        |> mapWith (fun p -> nums |> Seq.filter (fun d -> d.Length = p.Length))
+//    
+//    let diff (matches: (string * Display) seq) (item: string * Display seq) =
+//        let disp = snd item
+//        
+//        matches
+//        |> 
+//        1
+//    
+//    let subsetChars (previouslySolved: Map<char, char>) (matches: (string * Display) seq) =
+//        let newSolved =
+//            matches
+//            |> Seq.map (diff matches)
+//        
+//        previouslySolved
+//        |> Seq.append newSolved
+//    
+//    let rec reduceSolve (patterns: string[]) previouslySolved =
+//        
+//        let possibilities = patterns |> findPossible
+//        let matches = possibilities
+//                      |> Seq.filter (fun p -> Seq.length(snd p) = 1)
+//                      |> Seq.map (fun p -> (fst p, Seq.head(snd p)))
+//        
+//        let solved = subsetChars previouslySolved matches
+//        
+//        let knownCharacters = Map.empty<char, char>
+//        
+//        if Seq.length possibilities = Seq.length matches
+//        then
+//            matches |> Seq.map (fun s -> (fst s, Seq.head (snd s)))
+//        else
+//            reduceSolve patterns matches
+//    
+//    let rec solveLine (patterns: string[], theFour: string[]) =
+//        
+//        let solvedLine = reduceSolve patterns Seq.empty
+//            
+//        
+//        1
+//    
+    let signals, outputs =
+        ReadInputLines "Day08" "input.txt"
+        |> Seq.takeWhile (fun line -> line <> "#")
+        |> Seq.map (split " | ")
+        |> Seq.map paired
+        |> Seq.map (fun p -> (split "" (fst p), split "" (snd p)))
+        |> splitPairs
 
-    let pairCol (points: Point seq) =
-        seq {
-            use ie = points.GetEnumerator()
+    let uniques =
+        outputs
+        |> mapDeep (fun item -> item.Length)
+        |> mapMany id
+        |> Seq.filter (fun len -> Seq.contains len uniqueLengths)
+        |> Seq.length
 
-            if ie.MoveNext() then
-                let mutable prev = ie.Current
-
-                while ie.MoveNext() do
-                    let mutable curr = ie.Current
-
-                    prev.Bottom <- Some curr
-                    curr.Top <- Some prev
-                    yield prev
-
-                    prev <- curr
-
-                yield prev
-        }
-
-    let isLow (p: Point) =
-        (p.Right.IsNone || p.Right.Value.Val > p.Val)
-        && (p.Left.IsNone || p.Left.Value.Val > p.Val)
-        && (p.Bottom.IsNone || p.Bottom.Value.Val > p.Val)
-        && (p.Top.IsNone || p.Top.Value.Val > p.Val)
-
-    let rec findBasinSize (point: Point) =
-        let calc (maybePoint: Point option) =
-            match maybePoint with
-            | Some p when p.Val = 9 -> 0
-            | Some p when p.Val > point.Val && p.Val <> 9 -> findBasinSize p
-            | _ -> 0
-
-        let selfScore = if point.Val = 9 || point.Counted then 0 else 1
-        let top = calc point.Top
-        let left = calc point.Left
-        let right = calc point.Right
-        let bottom = calc point.Bottom
-
-        point.Counted <- true
-        selfScore + top + right + left + bottom
-
-    let points =
-        ReadInputLines "Day09" "input.txt"
-        |> Seq.map Seq.toList
-        |> mapDeep int
-        |> mapDeep (fun i -> i - int '0')
-        |> mapDeep buildPoint
-        |> Seq.map pairRow
-        |> Seq.transpose
-        |> Seq.map pairCol
-        |> Seq.transpose
-
-    let lowPoints = points |> Seq.concat |> Seq.filter isLow
-
-    let riskSum =
-        lowPoints
-        |> Seq.map (fun p -> p.Val + 1)
-        |> Seq.sum
-
-    let largestBasinProduct =
-        lowPoints
-        |> Seq.map findBasinSize
-        |> Seq.sortDescending
-        |> Seq.take 3
-        |> Seq.reduce (*)
-
-    printfn $"Part 1: {riskSum}"
-    printfn $"Part 2: {largestBasinProduct}"
+//    let solved =
+//        Seq.zip signals outputs
+//        |> Seq.map solveLine
+    
+    printfn $"Part 1: {uniques}"
+    printfn $"Part 2: "
