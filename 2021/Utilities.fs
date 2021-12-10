@@ -11,6 +11,7 @@ let SplitLinesSplitOn (day: string) (splitBy: char) =
 
 let ReadInputLines day filename =
     System.IO.File.ReadLines("input/" + day + "/" + filename)
+    |> Seq.takeWhile (fun line -> line <> "#")
 
 let stringAsInt: string -> int = int
 
