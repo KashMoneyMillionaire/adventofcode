@@ -62,6 +62,10 @@ let matrixMap (mapping: int -> int -> 'a -> 'b) (matrix: 'a seq seq) =
     matrix
     |> Seq.mapi (fun i r -> r |> Seq.mapi (mapping i))
 
+let inline fst3 (x, _, _) = x
+let inline snd3 (_, x, _) = x
+let inline third3 (_, _, x) = x
+
 let inline fst4 (x, _, _, _) = x
 let inline snd4 (_, x, _, _) = x
 let inline third4 (_, _, x, _) = x
@@ -110,3 +114,12 @@ let mapDeep func seqSeq =
 
 let mapMany func seqSeq =
     seqSeq |> Seq.collect func
+    
+let append newItem items =
+    items |> Seq.append (Seq.singleton newItem)
+    
+let filterNot func items=
+    items |> Seq.filter (fun i -> not (func i))
+    
+let middleItem items =
+    items |> List.skip (items.Length / 2) |> List.head
