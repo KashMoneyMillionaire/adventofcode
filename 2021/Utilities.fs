@@ -11,6 +11,7 @@ let SplitLinesSplitOn (day: string) (splitBy: char) =
 
 let ReadInputLines day filename =
     System.IO.File.ReadLines("input/" + day + "/" + filename)
+    |> Seq.skipWhile (fun line -> line = "")
     |> Seq.takeWhile (fun line -> line <> "#")
 
 let stringAsInt: string -> int = int
@@ -104,7 +105,7 @@ let pairs (d:Dictionary<'a, 'b>) =
 let paired twoItemSeq =
     (twoItemSeq |> Seq.head, twoItemSeq |> Seq.skip 1 |> Seq.head)
     
-let splitPairs pairs =
+let unzip pairs =
     let firsts = pairs |> Seq.map fst
     let seconds = pairs |> Seq.map snd
     (firsts, seconds)
@@ -123,3 +124,7 @@ let filterNot func items=
     
 let middleItem items =
     items |> List.skip (items.Length / 2) |> List.head
+    
+let ofLength len item = item |> Seq.length = len
+
+let sortStr (str: string) = str |> Seq.sort |> String.Concat
