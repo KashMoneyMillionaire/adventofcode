@@ -1,54 +1,50 @@
 ﻿module Day06
 
+open System
 open Utilities
 
 let solve () =
 
-    let daysToTrack = 18
-    let firstSpawnRate = 9
-    let secondSpawnRate = 7
+    let matureSpawnRate = 7
+    let youngSpawnRate = 9
+    let mutable cache = Map.empty<int*int, int64>
     
-    let rec fishAtTime =
-        function
-        | afterDays when afterDays < firstSpawnRate -> 1
-        | afterDays when afterDays >= firstSpawnRate -> 1 + fishAtTime (afterDays - secondSpawnRate)
-        | _ -> failwith "not possible?"
-    
-    let getSpawnLookup spawnTime =
-        seq { 0 .. daysToTrack + (firstSpawnRate - spawnTime) }
-        |> Seq.map (fun day -> (day, fishAtTime day))
-        |> seqDict
-    
-    let getOverallSpawnTime spawnTime =
-        getSpawnLookup spawnTime
-        |> pairs
-        |> Seq.last
-        |> snd
-    
-    let fishSpawnRates =
-        ReadInputLines "Day06" "test.txt"
+    let rec numFishWilSingleWillSpawn daysLeft currentState =
+        
+        if cache.ContainsKey(daysLeft, currentState) then
+            cache.[(daysLeft, currentState)]
+        else
+            let selfSpawnCount =
+                (float (daysLeft - currentState)) / (float matureSpawnRate)
+                |> Math.Ceiling
+                |> int64
+            
+            let childSpawnCount =
+                seq { (daysLeft - currentState - 1) .. -matureSpawnRate .. 0 }
+                |> Seq.map (fun days -> numFishWilSingleWillSpawn days (youngSpawnRate - 1))
+                |> Seq.sum
+            
+            let spawnTotal = (max selfSpawnCount 0L) + childSpawnCount
+            cache <- cache.Add((daysLeft, currentState), spawnTotal)
+            spawnTotal
+        
+    let originalSpawns =
+        ReadInputLines "Day06" "input.txt"
         |> Seq.head
         |> split ","
         |> Seq.map int
-        |> Seq.countBy id
-        |> Seq.map (fun (spawnTime, fishCount) -> (*) (getOverallSpawnTime spawnTime) fishCount)
+        
+    let totalFish80Days =
+        originalSpawns
+        |> Seq.map (numFishWilSingleWillSpawn 80)
+        |> Seq.map ((+) 1L)
         |> Seq.sum
-
-//    let buildMap spawnTime =
-//        seq { (daysToTrack + spawnTime - firstSpawnRate) .. -1 .. 1 }
-//        |> Seq.map fishGrowthIfBornWith
-//    
-//    let totalMap =
-//        daySequence 
-//        |> Seq.map (fun day -> (day, fishGrowthIfBornWith day))
-//        |> dict
-//
-//    let fishSum =
-//        fishSpawnRates
-//        |> Seq.map (fun (rate, _) -> buildMap rate)
-//        |> 
-//        |> Seq.map (fun currFishRate -> totalMap.[currFishRate + firstSpawnRate])
-//        |> Seq.sum
     
-    printfn $"Part 1: {fishSpawnRates}"
-    printfn $"Part 2: "
+    let totalFish256Days =
+        originalSpawns
+        |> Seq.map (numFishWilSingleWillSpawn 256)
+        |> Seq.map ((+) 1L)
+        |> Seq.sum
+    
+    printfn $"Part 1: {totalFish80Days}"
+    printfn $"Part 2: {totalFish256Days}"
