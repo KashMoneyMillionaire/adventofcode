@@ -18,7 +18,7 @@ let stringAsInt: string -> int = int
 
 let charsAsInt: char list -> int =
     fun (chars: char list) ->
-        let str = new System.String(List.toArray chars)
+        let str = String(List.toArray chars)
         stringAsInt str
 
 let numToChars x = x |> string |> Seq.toList
@@ -61,7 +61,7 @@ let getRow c (matrix: _ [] []) = matrix |> Array.skip c |> Array.head
 
 let matrixMap (mapping: int -> int -> 'a -> 'b) (matrix: 'a seq seq) =
     matrix
-    |> Seq.mapi (fun i r -> r |> Seq.mapi (mapping i))
+    |> Seq.mapi (fun y r -> r |> Seq.mapi (fun x -> mapping x y))
 
 let inline fst3 (x, _, _) = x
 let inline snd3 (_, x, _) = x
@@ -128,3 +128,119 @@ let middleItem items =
 let ofLength len item = item |> Seq.length = len
 
 let sortStr (str: string) = str |> Seq.sort |> String.Concat
+
+let findCoordinates (func: 'a -> bool) (matrix: 'a seq seq) =
+    matrix
+    |> matrixMap (fun x y c -> (x, y, c))
+    |> Seq.concat
+    |> Seq.filter (fun (_, _, c) -> func c)
+    |> Seq.map (fun (x,y,_) -> (x,y))
+    
+let any items = (Seq.tryHead items).IsSome
+
+let print (matrix: _ seq seq) =
+    
+    let printItem i =
+        printf $"%s{i.ToString()}"
+    
+    let printRow r =
+        r |> Seq.map printItem |> Seq.toList |> ignore
+        printf "\n"
+    
+    matrix |> Seq.map printRow |> Seq.toList |> ignore    
+    printf "\n"
+    matrix
+
+
+type MatrixPoint<'a>(x: int, y: int, c: 'a) =
+
+    let mutable top = None
+    let mutable bottom = None
+    let mutable left = None
+    let mutable right = None
+    let mutable value = c
+
+    override this.ToString() = this.Value.ToString()
+
+    member this.Coordinates = (x, y)
+    
+    member this.Value
+        with get () = value
+        and set newVal = value <- newVal
+
+    member this.Top
+        with get () = top
+        and set value = top <- value
+
+    member this.Bottom
+        with get () = bottom
+        and set value = bottom <- value
+
+    member this.Left
+        with get () = left
+        and set value = left <- value
+
+    member this.Right
+        with get () = right
+        and set value = right <- value
+
+    member this.Update(newVal: 'a) =
+        this.Value <- newVal
+
+type Matrix<'a> = MatrixPoint<'a> seq seq
+
+let buildMatrix (matrix: string seq): MatrixPoint<_> seq seq =
+    
+    let pairRow (points: MatrixPoint<_> seq) =
+        seq {
+            use ie = points.GetEnumerator()
+
+            if ie.MoveNext() then
+                let mutable prev = ie.Current
+
+                while ie.MoveNext() do
+                    let mutable curr = ie.Current
+
+                    prev.Right <- Some curr
+                    curr.Left <- Some prev
+                    yield prev
+
+                    prev <- curr
+
+                yield prev
+        }
+
+    let pairCol (points: MatrixPoint<_> seq) =
+        seq {
+            use ie = points.GetEnumerator()
+
+            if ie.MoveNext() then
+                let mutable prev = ie.Current
+
+                while ie.MoveNext() do
+                    let mutable curr = ie.Current
+
+                    prev.Bottom <- Some curr
+                    curr.Top <- Some prev
+                    yield prev
+
+                    prev <- curr
+
+                yield prev
+        }
+
+    matrix
+    |> Seq.map Seq.toList
+        |> mapDeep int
+        |> mapDeep (fun i -> i - int '0')
+        |> matrixMap (fun x y c -> MatrixPoint(x, y, c))
+        |> Seq.map pairRow
+        |> Seq.transpose
+        |> Seq.map pairCol
+        |> Seq.transpose
+        |> Seq.cache
+
+let optionFilter (seq: _ option seq) =
+    seq
+    |> Seq.filter (fun i -> i.IsSome)
+    |> Seq.map (fun i -> i.Value)
