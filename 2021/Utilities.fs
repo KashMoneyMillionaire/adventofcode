@@ -86,6 +86,8 @@ let (|Integer|_|) (str: string) =
    let mutable intVal = 0
    if Int32.TryParse(str, &intVal) then Some(intVal)
    else None
+  
+let (|String|_|) (str: string) = Some str
 
 let inline median items = items |> Array.sort |> (fun arr -> arr.[items.Length / 2])
 
@@ -244,3 +246,6 @@ let optionFilter (seq: _ option seq) =
     seq
     |> Seq.filter (fun i -> i.IsSome)
     |> Seq.map (fun i -> i.Value)
+    
+let printAll items =
+    items |> Seq.iter (fun i -> printf $"{i}")

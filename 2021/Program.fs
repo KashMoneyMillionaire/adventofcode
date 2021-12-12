@@ -4,13 +4,13 @@ open System
 open System.Reflection
 
 let rec prompt forever =
-    printfn "Which day would you like to run?"
 
     let modules =
         Assembly.GetExecutingAssembly().GetTypes()
         |> Array.filter (fun t -> t.Name.StartsWith("Day"))
 
     try
+        printfn "Which day would you like to run?"
         let read = Console.ReadLine() |> int
 
         let chosenModule =
