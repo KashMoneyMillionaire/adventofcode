@@ -89,6 +89,8 @@ let (|Integer|_|) (str: string) =
   
 let (|String|_|) (str: string) = Some str
 
+let (|Char|_|) (str: string) = Some str.[0]
+
 let inline median items = items |> Array.sort |> (fun arr -> arr.[items.Length / 2])
 
 let seqDict (src:seq<'a * 'b>) = 
@@ -249,3 +251,16 @@ let optionFilter (seq: _ option seq) =
     
 let printAll items =
     items |> Seq.iter (fun i -> printf $"{i}")
+    
+let splitSeq splitOn collection =
+    let index = Seq.findIndex (fun i -> i = splitOn) collection
+    (
+        Seq.take index collection,
+        Seq.skip (index + 1) collection
+    )
+    
+let pairMap (leftFunc, rightFunc) (seqL, seqR) =
+    (
+        seqL |> Seq.map leftFunc,
+        seqR |> Seq.map rightFunc
+    )
