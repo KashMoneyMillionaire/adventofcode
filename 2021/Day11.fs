@@ -11,17 +11,7 @@ let solve () =
         point.Value <- point.Value + 1
         
     let incAdjacent (c: MatrixPoint<int>) =
-        seq {
-            c.Bottom
-            c.Top
-            c.Left
-            c.Right
-            c.Right |> Option.bind (fun x -> x.Top)
-            c.Right |> Option.bind (fun x -> x.Bottom)
-            c.Left |> Option.bind (fun x -> x.Top)
-            c.Left |> Option.bind (fun x -> x.Bottom)
-        }
-        |> optionFilter
+        getAdjacent c true
         |> Seq.iter inc
 
     let notSynced (matrix: Matrix<int>) =
@@ -74,7 +64,7 @@ let solve () =
     
     let points =
         ReadInputLines "Day11" "input.txt"
-        |> buildMatrix
+        |> buildMatrixStr
         |> print
 
     let flashes, _ =

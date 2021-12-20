@@ -2,17 +2,23 @@
 
 open System
 open System.Collections.Generic
+open System.IO
 open System.Text.RegularExpressions
 
 let SplitLinesSplitOn (day: string) (splitBy: char) =
-    System.IO.File.ReadLines("input/" + day + "/input.txt")
+    File.ReadLines("input/" + day + "/input.txt")
     |> Seq.map (fun x -> x.Split(splitBy))
     |> Seq.toList
 
 let ReadInputLines day filename =
-    System.IO.File.ReadLines("input/" + day + "/" + filename)
+    File.ReadLines("input/" + day + "/" + filename)
     |> Seq.skipWhile (fun line -> line = "")
     |> Seq.takeWhile (fun line -> line <> "#")
+
+let WriteLines day filename (lines: string seq) =
+    let path = "c:/test/aoc/input/" + day + "/"
+    Directory.CreateDirectory path |> ignore
+    File.WriteAllLines(path + filename, lines)
 
 let stringAsInt: string -> int = int
 
@@ -125,7 +131,11 @@ let append newItem items =
     
 let filterNot func items=
     items |> Seq.filter (fun i -> not (func i))
-    
+
+let notIn excludedItems items =
+    items
+    |> filterNot (fun i -> Seq.contains i excludedItems)
+
 let middleItem items =
     items |> List.skip (items.Length / 2) |> List.head
     
@@ -155,6 +165,18 @@ let print (matrix: _ seq seq) =
     printf "\n"
     matrix
 
+let printBy func (matrix: _ seq seq) =
+    
+    let printItem i =
+        printf $"%s{func i}"
+    
+    let printRow r =
+        r |> Seq.map printItem |> Seq.toList |> ignore
+        printf "\n"
+    
+    matrix |> Seq.map printRow |> Seq.toList |> ignore    
+    printf "\n"
+
 
 type MatrixPoint<'a>(x: int, y: int, c: 'a) =
 
@@ -163,11 +185,18 @@ type MatrixPoint<'a>(x: int, y: int, c: 'a) =
     let mutable left = None
     let mutable right = None
     let mutable value = c
+    let mutable travelDist = Int32.MaxValue
+    let mutable visited = false
 
-    override this.ToString() = this.Value.ToString()
+    override this.ToString() =
+        $"{this.Coordinates} - {this.Value} for dist {this.TravelDist}"
 
     member this.Coordinates = (x, y)
     
+    member this.Visited
+        with get () = visited
+        and set newVal = visited <- newVal
+
     member this.Value
         with get () = value
         and set newVal = value <- newVal
@@ -188,12 +217,40 @@ type MatrixPoint<'a>(x: int, y: int, c: 'a) =
         with get () = right
         and set value = right <- value
 
+    member this.TravelDist
+        with get () = travelDist
+        and set value = travelDist <- value
+        
+    member this.TravelStr
+        with get () =
+            if travelDist = Int32.MaxValue then "  _" else $"%3d{travelDist}"
+
     member this.Update(newVal: 'a) =
         this.Value <- newVal
 
+
+type MatrixPointComparer() = 
+  interface IComparer<MatrixPoint<int>> with
+    member x.Compare(a, b) =
+        a.TravelDist.CompareTo(b.TravelDist)
+
 type Matrix<'a> = MatrixPoint<'a> seq seq
 
-let buildMatrix (matrix: string seq): MatrixPoint<_> seq seq =
+let get (coordinates: int*int) (matrix: 'a seq seq) =
+    matrix
+    |> Seq.skip (snd coordinates)
+    |> Seq.head
+    |> Seq.skip (fst coordinates)
+    |> Seq.head
+
+let size matrix =
+    (Seq.length matrix, Seq.length (Seq.head matrix))
+
+let last matrix =
+    let l, r = size matrix
+    (l-1, r-1)
+
+let buildMatrix (matrix: 'a seq seq) =
     
     let pairRow (points: MatrixPoint<_> seq) =
         seq {
@@ -234,15 +291,19 @@ let buildMatrix (matrix: string seq): MatrixPoint<_> seq seq =
         }
 
     matrix
+    |> matrixMap (fun x y c -> MatrixPoint<_>(x, y, c))
+    |> Seq.map pairRow
+    |> Seq.transpose
+    |> Seq.map pairCol
+    |> Seq.transpose
+    |> Seq.cache
+
+let buildMatrixStr (matrix: string seq): MatrixPoint<int> seq seq =
+    matrix
     |> Seq.map Seq.toList
-        |> mapDeep int
-        |> mapDeep (fun i -> i - int '0')
-        |> matrixMap (fun x y c -> MatrixPoint(x, y, c))
-        |> Seq.map pairRow
-        |> Seq.transpose
-        |> Seq.map pairCol
-        |> Seq.transpose
-        |> Seq.cache
+    |> mapDeep int
+    |> mapDeep (fun i -> i - int '0')
+    |> buildMatrix
 
 let optionFilter (seq: _ option seq) =
     seq
@@ -264,3 +325,51 @@ let pairMap (leftFunc, rightFunc) (seqL, seqR) =
         seqL |> Seq.map leftFunc,
         seqR |> Seq.map rightFunc
     )
+    
+let getAdjacent (c: MatrixPoint<'a>) includeDiagonal =
+    seq {
+        yield c.Bottom
+        yield c.Top
+        yield c.Left
+        yield c.Right
+        if includeDiagonal then yield c.Right |> Option.bind (fun x -> x.Top)
+        if includeDiagonal then yield c.Right |> Option.bind (fun x -> x.Bottom)
+        if includeDiagonal then yield c.Left |> Option.bind (fun x -> x.Top)
+        if includeDiagonal then yield c.Left |> Option.bind (fun x -> x.Bottom)
+    }
+    |> optionFilter
+    
+let listMatrix matrix =
+    matrix
+    |> Seq.map Seq.toArray
+    |> Seq.toArray
+    
+let except item items =
+    items |> Seq.filter (fun i -> i <> item)
+    
+let matrixAsMap matrix =
+    matrix
+    |> matrixMap (fun x y c -> ((x,y), c))
+    |> Seq.concat
+    |> Map
+
+let expandMatrix n func matrix =
+    let length, height = size matrix
+    let cache = matrixAsMap matrix
+    
+    seq { 0 .. height * n - 1 }
+    |> Seq.map (fun y ->
+        { 0 .. length * n - 1 }
+        |> Seq.map (fun x ->
+            let originalX = x % length
+            let originalY = y % height
+            let point = cache.[(originalX, originalY)]
+            let multiplierX = x / length
+            let multiplierY = y / height
+            
+            func point (multiplierX + multiplierY)
+            ))
+
+let stringSeq (str: string) =
+    str.ToCharArray()
+    |> Array.toSeq
