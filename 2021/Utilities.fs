@@ -20,17 +20,16 @@ let WriteLines day filename (lines: string seq) =
     Directory.CreateDirectory path |> ignore
     File.WriteAllLines(path + filename, lines)
 
-let stringAsInt: string -> int = int
-
-let charsAsInt: char list -> int =
-    fun (chars: char list) ->
-        let str = String(List.toArray chars)
-        stringAsInt str
+let charsAsInt chars = int (String(List.toArray chars))
 
 let numToChars x = x |> string |> Seq.toList
 
 let logAndReturn map item =
     printfn (map item)
+    item
+    
+let printLabel label item =
+//    printf $"{label}: {item}\n"
     item
 
 let logAndContinue iter map = iter |> Seq.map (logAndReturn map)
@@ -44,11 +43,58 @@ let pairwise (offset: int) (source: seq<'T>) =
 let split (splitOn: string) (toSplit: string) =
     toSplit.Split(splitOn, StringSplitOptions.RemoveEmptyEntries)
 
+let chars str = Seq.takeWhile (fun _ -> true) str
+
 type Binary =
+    
     static member parse(str) = Convert.ToInt32(str, 2)
+    static member parseL(str) = Convert.ToInt64(str, 2)
 
     static member parse(chars) =
         chars |> Seq.toArray |> String |> Binary.parse
+        
+    static member hexToBinary(str: string) =
+        let mapping =
+            seq {
+                ('0', "0000")
+                ('1', "0001")
+                ('2', "0010")
+                ('3', "0011")
+                ('4', "0100")
+                ('5', "0101")
+                ('6', "0110")
+                ('7', "0111")
+                ('8', "1000")
+                ('9', "1001")
+                ('a', "1010")
+                ('b', "1011")
+                ('c', "1100")
+                ('d', "1101")
+                ('e', "1110")
+                ('f', "1111")
+                ('A', "1010")
+                ('B', "1011")
+                ('C', "1100")
+                ('D', "1101")
+                ('E', "1110")
+                ('F', "1111")
+            }
+            |> dict
+        
+        str
+        |> Seq.map (fun c -> mapping[c])
+        |> String.concat ""
+        
+//        if str.Length <= 16 then
+//            let hex = Convert.ToInt64(str, 16)
+//            let bin = Convert.ToString(hex, 2)
+//            let len = bin.Length
+//            String('0', len % 4) + bin
+//        else
+//            Seq.chunkBySize 16 str
+//            |> Seq.map String
+//            |> Seq.map Binary.hexToBinary
+//            |> String.Concat
 
 let countBits (bits: seq<char>) =
     let countBit (zero, one) newChar =
@@ -250,7 +296,7 @@ let last matrix =
     let l, r = size matrix
     (l-1, r-1)
 
-let buildMatrix (matrix: 'a seq seq) =
+let buildMatrix (matrix: int seq seq) =
     
     let pairRow (points: MatrixPoint<_> seq) =
         seq {
@@ -373,3 +419,6 @@ let expandMatrix n func matrix =
 let stringSeq (str: string) =
     str.ToCharArray()
     |> Array.toSeq
+
+let firstTwo items =
+    [|Seq.head items; Seq.head (items |> Seq.skip 1)|]
