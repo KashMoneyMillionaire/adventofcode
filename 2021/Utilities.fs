@@ -422,3 +422,6 @@ let stringSeq (str: string) =
 
 let firstTwo items =
     [|Seq.head items; Seq.head (items |> Seq.skip 1)|]
+    
+let (><) items1 items2 =
+    Seq.allPairs items1 items2
