@@ -33,7 +33,7 @@ let solve () =
     let dots, folds =
         ReadInputLines "Day13" "input.txt"
         |> splitSeq ""
-        |> pairMap (parseCommands, parseFolds)
+        |> pairSeqMap (parseCommands, parseFolds)
     
     let firstFold = foldDots dots (Seq.head folds)
     

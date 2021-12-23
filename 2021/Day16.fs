@@ -23,11 +23,11 @@ let solve () =
             | _ -> None
             )
     
-    let parseVersion stream =
+    let parseVersion (stream: char seq) =
         let version = Seq.take 3 stream |> Binary.parse |> printLabel "version"
         (Version version, 3)
     
-    let parseType stream =
+    let parseType (stream: char seq) =
         let tId = stream |> Seq.take 3 |> Binary.parse |> printLabel "type"
         (Type tId, 3)
     

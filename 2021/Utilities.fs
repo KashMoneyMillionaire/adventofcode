@@ -46,12 +46,15 @@ let split (splitOn: string) (toSplit: string) =
 let chars str = Seq.takeWhile (fun _ -> true) str
 
 type Binary =
+    static member parseL(str) = Convert.ToInt64(str, 2)
     
     static member parse(str) = Convert.ToInt32(str, 2)
-    static member parseL(str) = Convert.ToInt64(str, 2)
 
-    static member parse(chars) =
+    static member parse(chars: char seq) =
         chars |> Seq.toArray |> String |> Binary.parse
+
+    static member parse(nums: int seq) =
+        nums |> Seq.map (fun n -> (char n) + '0') |> Binary.parse
         
     static member hexToBinary(str: string) =
         let mapping =
@@ -114,6 +117,20 @@ let getRow c (matrix: _ [] []) = matrix |> Array.skip c |> Array.head
 let matrixMap (mapping: int -> int -> 'a -> 'b) (matrix: 'a seq seq) =
     matrix
     |> Seq.mapi (fun y r -> r |> Seq.mapi (fun x -> mapping x y))
+
+let matrixMapL (mapping: int -> int -> 'a -> 'b) (matrix: 'a list list) =
+    matrix
+    |> List.mapi (fun y r -> r |> List.mapi (fun x -> mapping x y))
+
+let filterMatrix (mapping: int -> int -> 'a -> bool) (matrix: 'a seq seq) =
+    matrix
+    |> Seq.mapi (fun y r -> r |> Seq.mapi (fun x c -> (mapping x y c, c)))
+    |> Seq.map (fun row -> row |> Seq.filter fst |> Seq.map snd)
+
+let filterMatrixL (mapping: int -> int -> 'a -> bool) (matrix: 'a list list) =
+    matrix
+    |> List.mapi (fun y r -> r |> List.mapi (fun x c -> (mapping x y c, c)))
+    |> List.map (fun row -> row |> List.filter fst |> List.map snd)
 
 let inline fst3 (x, _, _) = x
 let inline snd3 (_, x, _) = x
@@ -199,6 +216,19 @@ let findCoordinates (func: 'a -> bool) (matrix: 'a seq seq) =
 let any items = (Seq.tryHead items).IsSome
 
 let print (matrix: _ seq seq) =
+    
+    let printItem i =
+        printf $"%s{i.ToString()}"
+    
+    let printRow r =
+        r |> Seq.map printItem |> Seq.toList |> ignore
+        printf "\n"
+    
+    matrix |> Seq.map printRow |> Seq.toList |> ignore    
+    printf "\n"
+    matrix
+
+let printL (matrix: _ list list) =
     
     let printItem i =
         printf $"%s{i.ToString()}"
@@ -366,7 +396,10 @@ let splitSeq splitOn collection =
         Seq.skip (index + 1) collection
     )
     
-let pairMap (leftFunc, rightFunc) (seqL, seqR) =
+let pairMap (leftFunc, rightFunc) (l, r) =
+    (leftFunc l, rightFunc r)
+    
+let pairSeqMap (leftFunc, rightFunc) (seqL, seqR) =
     (
         seqL |> Seq.map leftFunc,
         seqR |> Seq.map rightFunc
@@ -425,3 +458,6 @@ let firstTwo items =
     
 let (><) items1 items2 =
     Seq.allPairs items1 items2
+    
+let seqToList seqSeq =
+    seqSeq |> Seq.map Seq.toList |> Seq.toList
