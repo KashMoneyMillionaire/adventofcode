@@ -458,6 +458,18 @@ let firstTwo items =
     
 let (><) items1 items2 =
     Seq.allPairs items1 items2
+       
+let (%%) (v: int) (modz: int) =
+    (v - 1) % modz + 1
     
 let seqToList seqSeq =
     seqSeq |> Seq.map Seq.toList |> Seq.toList
+    
+let either func (l, r) =
+    func l || func r
+    
+let gte testAgainst valToTest =
+    valToTest >= testAgainst
+    
+let toString v =
+    v.ToString()
