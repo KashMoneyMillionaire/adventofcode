@@ -456,8 +456,12 @@ let stringSeq (str: string) =
 let firstTwo items =
     [|Seq.head items; Seq.head (items |> Seq.skip 1)|]
     
-let (><) items1 items2 =
+let (><) (items1: 'a seq) (items2: 'b seq) =
     Seq.allPairs items1 items2
+       
+let (>|<) (items1: ('a*'b) seq) (items2: 'c seq) =
+    Seq.allPairs items1 items2
+    |> Seq.map (fun ((a, b), c) -> (a,b,c))
        
 let (%%) (v: int) (modz: int) =
     (v - 1) % modz + 1
@@ -473,3 +477,15 @@ let gte testAgainst valToTest =
     
 let toString v =
     v.ToString()
+    
+let sumBy func cube =
+    let mutable count = 0
+    cube |> Array3D.iter (fun i -> count <- count + func i)
+    count
+    
+let min3 a b c =
+    min (min a b) c
+    
+let max3 a b c =
+    max (max a b) c
+    
