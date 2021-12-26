@@ -5,6 +5,13 @@ open System.Collections.Generic
 open System.IO
 open System.Text.RegularExpressions
 
+let (><) (items1: 'a seq) (items2: 'b seq) =
+    Seq.allPairs items1 items2
+       
+let (>|<) (items1: ('a*'b) seq) (items2: 'c seq) =
+    Seq.allPairs items1 items2
+    |> Seq.map (fun ((a, b), c) -> (a,b,c))
+       
 let SplitLinesSplitOn (day: string) (splitBy: char) =
     File.ReadLines("input/" + day + "/input.txt")
     |> Seq.map (fun x -> x.Split(splitBy))
@@ -227,6 +234,19 @@ let print (matrix: _ seq seq) =
     matrix |> Seq.map printRow |> Seq.toList |> ignore    
     printf "\n"
     matrix
+
+let printM2 (matrix: _[,]) =
+    
+    let printItem x y =
+        printf $"%s{matrix[x,y].ToString()}"
+    
+    seq { 0 .. matrix.GetLength(1) - 1 }
+    |> Seq.iter (fun y ->
+        seq { 0 .. matrix.GetLength(0) - 1 } |> Seq.iter (fun x -> printItem x y)
+        printf "\n"
+        )
+    
+    printf "\n"
 
 let printL (matrix: _ list list) =
     
@@ -456,13 +476,6 @@ let stringSeq (str: string) =
 let firstTwo items =
     [|Seq.head items; Seq.head (items |> Seq.skip 1)|]
     
-let (><) (items1: 'a seq) (items2: 'b seq) =
-    Seq.allPairs items1 items2
-       
-let (>|<) (items1: ('a*'b) seq) (items2: 'c seq) =
-    Seq.allPairs items1 items2
-    |> Seq.map (fun ((a, b), c) -> (a,b,c))
-       
 let (%%) (v: int) (modz: int) =
     (v - 1) % modz + 1
     
