@@ -22,7 +22,7 @@ let WriteLines day filename (lines: string seq) =
 
 let charsAsInt chars = int (String(List.toArray chars))
 
-let numToChars x = x |> string |> Seq.toList
+let toChars x = x |> string |> Seq.toList
 
 let logAndReturn map item =
     printfn (map item)

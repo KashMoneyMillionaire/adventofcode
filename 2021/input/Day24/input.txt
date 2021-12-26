@@ -1,0 +1,273 @@
+﻿inp w     (9,0,0,0) 
+
+mul x 0   (9,0,0,0)   
+add x z   (9,0,0,0) 
+mod x 26  (9,0,0,0)    
+
+div z 1   (9,0,0,0)   
+
+add x 11  (9,11,0,0)    
+eql x w   (9,0,0,0)   
+eql x 0   (9,1,0,0)   
+mul y 0   (9,0,0,0)   
+add y 25  (9,0,25,0)    
+mul y x   (9,0,0,0)   
+add y 1   (9,0,1,0)   
+mul z y   (9,0,0,0)   
+mul y 0   (9,0,0,0)   
+add y w   (9,0,9,0)   
+add y 5   (9,0,14,0)   
+mul y x   (9,0,0,0)   
+add z y   (9,0,0,0)   
+
+Read w
+Set x = z % 26
+Div Z by 1 or 26
+
+
+inp w     (9,0,0,0)   
+mul x 0   (0,0,0,0)     
+add x z   (0,0,0,0)     
+mod x 26  (0,0,0,0)      
+div z 1   (0,0,0,0)     
+add x 13  (9,13,0,0)      
+eql x w   (9,0,0,0)     
+eql x 0   (9,1,0,0)     
+mul y 0   (9,0,0,0)     
+add y 25  (9,1,25,0)      
+mul y x   (9,1,25,0)     
+add y 1   (9,1,26,0)
+mul z y   (9,1,26,0)
+mul y 0   (9,1,0,0)
+add y w   (9,1,9,0)
+add y 5   (9,1,14,0)
+mul y x   (9,1,14,0)
+add z y   (9,1,14,14)
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 12
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 1
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 15
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 15
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 10
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 2
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -1
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 2
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 14
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 5
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -8
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 8
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -7
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 14
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -8
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 12
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 1
+add x 11
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 7
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -2
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 14
+mul y x
+add z y
+
+inp w
+mul x 0
+add x z
+mod x 26
+div z 26
+add x -2
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y 13
+mul y x
+add z y
+
+inp w     (0,0,0,0)
+mul x 0   
+add x z   
+mod x 26  
+div z 26  
+add x -13 
+eql x w   
+eql x 0   
+mul y 0   
+add y 25  
+mul y x   
+add y 1   
+mul z y   
+mul y 0   
+add y w   
+add y 6   x=0, y=-6
+mul y x   y or x has to be 0
+add z y   y has to be 0
