@@ -47,6 +47,10 @@ let pairwise (offset: int) (source: seq<'T>) =
 
     Seq.zip start next
 
+let combinePairs (pairs: (_*_) seq) =
+    pairs
+    |> Seq.map (fun (a, b) -> $"{a}{b}")
+
 let split (splitOn: string) (toSplit: string) =
     toSplit.Split(splitOn, StringSplitOptions.RemoveEmptyEntries)
 
