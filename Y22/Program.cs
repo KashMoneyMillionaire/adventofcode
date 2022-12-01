@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
+using Y22.Helpers;
 
 Console.Write("Input: ");
 string result = Console.ReadLine() switch
 {
+    ['.', '.', ' ', ..var day] => DayGenerator.Generate(int.Parse(day)),
     [..var day, '.', var part] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "input.txt")),
     [..var day, '.', var part, '.'] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "test.txt")),
     _ => "Unknown"
@@ -10,7 +12,6 @@ string result = Console.ReadLine() switch
 
 result.Print("The solution is: ");
 Console.Read();
-
 
 string Solve(int day, char part, string input)
 {
@@ -22,7 +23,8 @@ string Solve(int day, char part, string input)
 
     try
     {
-        return solver.GetMethod($"SolvePart{part}").Invoke(null, new object[] { input }).ToString();
+        return solver.GetMethod($"SolvePart{part}")?.Invoke(null, new object[] { input })?.ToString()
+            ?? throw new("Couldn't find method");
     }
     catch (Exception e)
     {
