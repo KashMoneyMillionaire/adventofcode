@@ -9,7 +9,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "2019", "2019\2019.fsproj", 
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "2021", "2021\2021.fsproj", "{E2ECE11E-1331-4D02-9DC3-CC797F594327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Year2021", "Year2021\Year2021.csproj", "{DBFD5F9B-D15B-484A-835B-A3C19B764D4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Y21", "Y21\Y21.csproj", "{DBFD5F9B-D15B-484A-835B-A3C19B764D4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Y22", "Y22\Y22.csproj", "{00E8977C-8A2D-49F8-81E3-954E2131BC8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DBFD5F9B-D15B-484A-835B-A3C19B764D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBFD5F9B-D15B-484A-835B-A3C19B764D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBFD5F9B-D15B-484A-835B-A3C19B764D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00E8977C-8A2D-49F8-81E3-954E2131BC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00E8977C-8A2D-49F8-81E3-954E2131BC8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00E8977C-8A2D-49F8-81E3-954E2131BC8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00E8977C-8A2D-49F8-81E3-954E2131BC8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
