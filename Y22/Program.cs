@@ -1,17 +1,23 @@
 ﻿using System.Reflection;
+using Y22;
 using Y22.Helpers;
 
-Console.Write("Input: ");
-string result = Console.ReadLine() switch
-{
-    ['.', '.', ' ', ..var day] => DayGenerator.Generate(int.Parse(day)),
-    [..var day, '.', var part] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "input.txt")),
-    [..var day, '.', var part, '.'] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "test.txt")),
-    _ => "Unknown"
-};
+while (true) Run();
 
-result.Print("The solution is: ");
-Console.Read();
+void Run()
+{
+    Console.Write("Input: ");
+    string result = Console.ReadLine() switch
+    {
+        ['.', '.', ' ', ..var day] => DayGenerator.Generate(int.Parse(day)),
+        [..var day, '.', var part] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "input.txt")),
+        [..var day, '.', var part, '.'] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "test.txt")),
+        _ => "Unknown"
+    };
+
+    result.Print("The solution is: ");
+}
+
 
 string Solve(int day, char part, string input)
 {
@@ -52,9 +58,4 @@ public class DayOfAttribute : Attribute
     {
         Day = dayNumber;
     }
-}
-
-public static class Extensions
-{
-    public static void Print(this string value, string prefix) => Console.WriteLine($"{prefix}{value}");
 }

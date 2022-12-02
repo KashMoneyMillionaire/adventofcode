@@ -1,0 +1,6 @@
+A Y
+B X
+C Z
+# Rock      Paper     2 + 6
+# Paper     Rock      1 + 0
+# Scissors  Scissors  3 + 3
