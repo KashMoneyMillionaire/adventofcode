@@ -7,8 +7,13 @@ while (true) Run();
 void Run()
 {
     Console.Write("Input: ");
-    string result = Console.ReadLine() switch
+    string input = Console.ReadLine()!;
+
+    Extensions.IsTest = input.EndsWith(".");
+    
+    string result = input switch
     {
+        "" => throw new("ending"),
         ['.', '.', ' ', ..var day] => DayGenerator.Generate(int.Parse(day)),
         [..var day, '.', var part] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "input.txt")),
         [..var day, '.', var part, '.'] => Solve(int.Parse(day), part, GetInput(int.Parse(day), "test.txt")),
