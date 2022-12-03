@@ -4,6 +4,8 @@ open Utilities
 
 type Cube = bool[,,]
 
+type Cube2 = (int * int * int * int * int * int) * int64
+
 type Bound = (int * int) * (int * int) * (int * int) 
 
 type Instruction = {
@@ -48,15 +50,61 @@ let solve () =
         let { Dir = dir; Bounds = bounds } = instr
         let (minX, maxX), (minY, maxY), (minZ, maxZ) = bounds
         { Dir = dir; Bounds = ((minX+b, maxX+b), (minY+b, maxY+b), (minZ+b, maxZ+b)) }
+    
+    let intersect instr (cube: Cube2)  =
+        let { Bounds = ((nx0, nx1), (ny0, ny1), (nz0, nz1)) } = instr
+        let (ex0, ex1, ey0, ey1, ez0, ez1), sign = cube
         
-    let cube = Array3D.create top top top  (false)
+        let ix0 = max nx0 ex0
+        let ix1 = min nx1 ex1
+        let iy0 = max ny0 ey0
+        let iy1 = min ny1 ey1
+        let iz0 = max nz0 ez0
+        let iz1 = min nz1 ez1
+        
+        if ix0 <= ix1 && iy0 <= iy1 && iz0 <= iz1 then
+            Some ((ix0, ix1, iy0, iy1, iz0, iz1), -sign)
+        else
+            None
 
-    ReadInputLines "Day22" "input.txt"
-    |> Seq.map parseInput
-    |> Seq.map (adjustPositive 50)
-    |> Seq.iter (combineCube cube)
+    let addNewCubes cubes instr =
+        let newSet =
+            seq {
+                let intersections = cubes |> List.choose (intersect instr) |> Seq.toList
+                yield! cubes
+                yield! intersections
+                let {Dir = dir; Bounds = ((nx0, nx1), (ny0, ny1), (nz0, nz1))} = instr
+                if dir = "on" then
+                    yield ((nx0, nx1, ny0, ny1, nz0, nz1), 1) 
+            }
+            |> Seq.toList
+            
+        newSet
+        
+    let count command =
+        let (ex0, ex1, ey0, ey1, ez0, ez1), sign = command
+        let x = abs (ex0 - ex1) |> int64
+        let y = abs (ey0 - ey1) |> int64
+        let z = abs (ez0 - ez1) |> int64
+        x * y * z * sign
+        
+    let cube = Array3D.create top top top false
+    
+    let commands =
+        ReadInputLines "Day22" "input.txt"
+        |> Seq.map parseInput
+    
+//    commands
+//    |> Seq.map (adjustPositive 50)
+//    |> Seq.iter (combineCube cube)
     
     let onCount = cube |> sumBy (fun c -> if c then 1 else 0)    
     
+    let count2 =
+        (List.empty, commands)
+        ||> Seq.fold addNewCubes
+        |> Seq.toList
+        |> Seq.sumBy count
+    
     printfn $"Part 1: {onCount}"
-    printfn $"Part 2: "
+    printfn $"Part 2: {count2}"

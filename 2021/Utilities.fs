@@ -22,6 +22,9 @@ let ReadInputLines day filename =
     |> Seq.skipWhile (fun line -> line = "")
     |> Seq.takeWhile (fun line -> line <> "#")
 
+let ReadInput day filename =
+    File.ReadAllText("input/" + day + "/" + filename)
+
 let WriteLines day filename (lines: string seq) =
     let path = "c:/test/aoc/input/" + day + "/"
     Directory.CreateDirectory path |> ignore
