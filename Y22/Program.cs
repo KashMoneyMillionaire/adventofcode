@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Y22;
+using Y22.Extensions;
 using Y22.Helpers;
 
 while (true) Run();

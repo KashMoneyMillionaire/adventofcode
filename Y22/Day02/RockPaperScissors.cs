@@ -1,3 +1,5 @@
+using Y22.Extensions;
+
 namespace Y22.Day02;
 
 [DayOf(02)]
