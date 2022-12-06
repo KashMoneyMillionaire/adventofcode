@@ -11,7 +11,7 @@ public static class Extensions
         int take = int.MaxValue
         )
         => input.Split(splitOn ?? Environment.NewLine)
-                .Where(l => skipEmptyLines && !string.IsNullOrWhiteSpace(l))
+                .Where(l => !skipEmptyLines || !string.IsNullOrWhiteSpace(l))
                 .Where(l => !l.StartsWith("#"))
                 .Take(take);
 
@@ -44,5 +44,51 @@ public static class Extensions
         bool b = r1.End.Value >= r2.Start.Value && r1.Start.Value <= r2.End.Value;
         bool overlaps1 = r1.Start.Value <= r2.End.Value && r1.End.Value >= r2.Start.Value;
         return b || overlaps1;
+    }
+
+    public static Queue<T> Queue<T>(this IEnumerable<T> items) => new(items);
+
+    public static Stack<T> Stack<T>(this IEnumerable<T> items) => new(items);
+
+    public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> input, T splitOn)
+        where T : IEquatable<T>
+    {
+        var currentSet = Enumerable.Empty<T>();
+        foreach (var item in input)
+        {
+            if (item.Equals(splitOn))
+            {
+                yield return currentSet;
+                currentSet = Enumerable.Empty<T>();
+                continue;
+            }
+
+            currentSet = currentSet.Append(item);
+        }
+
+        yield return currentSet;
+    }
+
+    public static string Join<T>(this IEnumerable<T> items, string joinWith)
+        => string.Join(joinWith, items);
+
+    public static bool IsDistinct<T>(this IEnumerable<T> input)
+    {
+        var alreadySeen=new HashSet<T>();
+        return input.All(item => alreadySeen.Add(item));
+    }
+
+    public static IEnumerable<IEnumerable<T>> Window<T>(this T[] items, int windowSize)
+    {
+        for (int i = 0; i < items.Length - windowSize; i++)
+        {
+            yield return items[i..(i + windowSize)];
+        }
+    }
+
+    public static (T Item, int Index) FirstOrDefault<T>(this IEnumerable<T> items, Func<T, int, bool> func)
+    {
+        return items.Select((item, i) => (item, i))
+                    .FirstOrDefault(tuple => func(tuple.item, tuple.i));
     }
 }
