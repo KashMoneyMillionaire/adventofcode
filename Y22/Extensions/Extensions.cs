@@ -29,6 +29,24 @@ public static class Extensions
         });
     }
 
+    public static T Log<T>(this T item, string? message = null)
+    {
+        if (!IsTest)
+            return item;
+        
+        Console.WriteLine($"{message}{item}");
+        return item;
+    }
+
+    public static T Log<T>(this T item, Func<T, object> func, string? message = null)
+    {
+        if (!IsTest)
+            return item;
+        
+        Console.WriteLine($"{message}{func(item)}");
+        return item;
+    }
+
     public static TOut Map<TIn, TOut>(this TIn input, Func<TIn, TOut> func) => func(input);
 
     public static T Parse<T>(this string input) where T : IParsable<T>
@@ -90,5 +108,10 @@ public static class Extensions
     {
         return items.Select((item, i) => (item, i))
                     .FirstOrDefault(tuple => func(tuple.item, tuple.i));
+    }
+
+    public static T DoUntil<T>(this T item, Func<T, T> doThis, Func<T, bool> until)
+    {
+        return until(item) ? item : doThis(item);
     }
 }
