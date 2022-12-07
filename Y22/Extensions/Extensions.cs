@@ -10,7 +10,8 @@ public static class Extensions
         string? splitOn = null,
         int take = int.MaxValue
         )
-        => input.Split(splitOn ?? Environment.NewLine)
+        => input.ReplaceLineEndings()
+                .Split(splitOn ?? Environment.NewLine)
                 .Where(l => !skipEmptyLines || !string.IsNullOrWhiteSpace(l))
                 .Where(l => !l.StartsWith("#"))
                 .Take(take);
@@ -38,9 +39,9 @@ public static class Extensions
         return item;
     }
 
-    public static T Log<T>(this T item, Func<T, object> func, string? message = null)
+    public static T Log<T>(this T item, Func<T, object> func, bool overrideTest = false, string? message = null)
     {
-        if (!IsTest)
+        if (!IsTest && !overrideTest)
             return item;
         
         Console.WriteLine($"{message}{func(item)}");
@@ -112,6 +113,10 @@ public static class Extensions
 
     public static T DoUntil<T>(this T item, Func<T, T> doThis, Func<T, bool> until)
     {
-        return until(item) ? item : doThis(item);
+        while (true)
+        {
+            if (until(item)) return item;
+            item = doThis(item);
+        }
     }
 }
