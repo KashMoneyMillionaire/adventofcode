@@ -143,4 +143,9 @@ public static class Extensions
 
         return forest;
     }
+
+    public static bool IsAdjacent(this (int x, int y) head, (int x, int y) tail)
+    {
+        return Math.Abs(head.x - tail.x) <= 1 && Math.Abs(head.y - tail.y) <= 1;
+    }
 }

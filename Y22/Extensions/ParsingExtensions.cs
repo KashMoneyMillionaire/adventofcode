@@ -5,6 +5,19 @@ namespace Y22.Extensions;
 
 public static class ParsingExtensions
 {
+    public static (T1, T2) RegexParse<T1, T2>(
+        this string input,
+        [StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
+        where T1 : IParsable<T1>
+        where T2 : IParsable<T2>
+    {
+        var groups = new Regex(pattern).Match(input).Groups.Values.Skip(1).ToList();
+        return (
+            groups[0].Value.Parse<T1>(),
+            groups[1].Value.Parse<T2>()
+        );
+    }
+    
     public static (T1, T2, T3) RegexParse<T1, T2, T3>(
         this string input,
         [StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
