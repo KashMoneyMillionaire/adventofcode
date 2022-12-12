@@ -39,6 +39,15 @@ public static class Extensions
         return item;
     }
 
+    public static T Log<T>(this T item, Func<T, string> map)
+    {
+        if (!IsTest)
+            return item;
+        
+        Console.WriteLine(map(item));
+        return item;
+    }
+
     public static T Log<T>(this T item, Func<T, object> func, bool overrideTest = false, string? message = null)
     {
         if (!IsTest && !overrideTest)
@@ -118,5 +127,20 @@ public static class Extensions
             if (until(item)) return item;
             item = doThis(item);
         }
+    }
+
+    public static T[][] AsMatrix<T>(this string input, Func<string, int, int, T[][], T> transform)
+    {
+        var rows = input.ReadLines().ToList();
+        var enumerable = rows.SelectMany((l, y) => l.Select((c, x) => (c, x, y)));
+
+        var forest = new T[rows.Count][];
+        foreach (var cell in enumerable)
+        {
+            forest[cell.x] ??= new T[rows[0].Length];
+            forest[cell.x][cell.y] = transform(cell.c.ToString(), cell.x, cell.y, forest);
+        }
+
+        return forest;
     }
 }
