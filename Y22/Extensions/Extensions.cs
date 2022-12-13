@@ -5,11 +5,11 @@ public static class Extensions
     public static void Print(this string value, string prefix) => Console.WriteLine($"{prefix}{value}");
 
     public static IEnumerable<string> ReadLines(
-        this string input, 
-        bool skipEmptyLines = true, 
+        this string input,
+        bool skipEmptyLines = true,
         string? splitOn = null,
         int take = int.MaxValue
-        )
+    )
         => input.ReplaceLineEndings()
                 .Split(splitOn ?? Environment.NewLine)
                 .Where(l => !skipEmptyLines || !string.IsNullOrWhiteSpace(l))
@@ -17,12 +17,12 @@ public static class Extensions
                 .Take(take);
 
     public static bool IsTest = false;
-    
+
     public static IEnumerable<T> Log<T>(this IEnumerable<T> item, string? message = null)
     {
         if (!IsTest)
             return item;
-        
+
         return item.Select(i =>
         {
             Console.WriteLine($"{message}{i}");
@@ -34,7 +34,7 @@ public static class Extensions
     {
         if (!IsTest)
             return item;
-        
+
         Console.WriteLine($"{message}{item}");
         return item;
     }
@@ -43,7 +43,7 @@ public static class Extensions
     {
         if (!IsTest)
             return item;
-        
+
         Console.WriteLine(map(item));
         return item;
     }
@@ -52,7 +52,7 @@ public static class Extensions
     {
         if (!IsTest && !overrideTest)
             return item;
-        
+
         Console.WriteLine($"{message}{func(item)}");
         return item;
     }
@@ -63,10 +63,10 @@ public static class Extensions
     {
         return T.Parse(input, null);
     }
-    
-    public static bool Covers(this Range r1, Range r2) 
+
+    public static bool Covers(this Range r1, Range r2)
         => r1.Start.Value <= r2.Start.Value && r1.End.Value >= r2.End.Value;
-    
+
     public static bool Overlaps(this Range r1, Range r2)
     {
         bool b = r1.End.Value >= r2.Start.Value && r1.Start.Value <= r2.End.Value;
@@ -74,7 +74,7 @@ public static class Extensions
         return b || overlaps1;
     }
 
-    public static Queue<T> Queue<T>(this IEnumerable<T> items) => new(items);
+    public static Queue<T> AsQueue<T>(this IEnumerable<T> items) => new(items);
 
     public static Stack<T> Stack<T>(this IEnumerable<T> items) => new(items);
 
@@ -102,7 +102,7 @@ public static class Extensions
 
     public static bool IsDistinct<T>(this IEnumerable<T> input)
     {
-        var alreadySeen=new HashSet<T>();
+        var alreadySeen = new HashSet<T>();
         return input.All(item => alreadySeen.Add(item));
     }
 
@@ -148,4 +148,47 @@ public static class Extensions
     {
         return Math.Abs(head.x - tail.x) <= 1 && Math.Abs(head.y - tail.y) <= 1;
     }
+
+    public static IEnumerable<TState> Select<T, TState>(this IEnumerable<T> items, TState state,
+                                                        Func<TState, T, TState> func)
+    {
+        foreach (var item in items)
+        {
+            state = func(state, item);
+            yield return state;
+        }
+    }
+
+    public static IEnumerable<T1> SelectFirst<T1, T2>(this IEnumerable<(T1, T2)> items)
+        => items.Select(i => i.Item1);
+
+    public static bool IsBetween(this int val, int left, int right)
+        => left <= val && val <= right;
+
+    public static bool IsWithin(this int val, int baseVal, int offsetLeft, int offsetRight)
+        => val.IsBetween(baseVal + offsetLeft, baseVal + offsetRight);
+
+    public static IEnumerable<T> Stream<T>(this T item)
+    {
+        while (true)
+        {
+            yield return item;
+        }
+    }
+
+    public static IEnumerable<T> Stream<T>(this T item, Action<T> toDo)
+        => item.Stream().Select(i =>
+        {
+            toDo(i);
+            return i;
+        });
+
+    public static IEnumerable<T> Stream<T>(this T item, Action<T> toDo, Func<T, bool> doUntil)
+        => item.Stream()
+               .Select(i =>
+                {
+                    toDo(i);
+                    return i;
+                })
+               .TakeWhile(i => !doUntil(i));
 }
