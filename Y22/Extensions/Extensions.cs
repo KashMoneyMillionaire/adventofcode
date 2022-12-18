@@ -129,6 +129,15 @@ public static class Extensions
         }
     }
 
+    public static T DoTimes<T>(this T item, Func<T, T> doThis, int numTimes)
+    {
+        while (true)
+        {
+            if (numTimes-- <= 0) return item;
+            item = doThis(item);
+        }
+    }
+
     public static T[][] AsMatrix<T>(this string input, Func<string, int, int, T[][], T> transform)
     {
         var rows = input.ReadLines().ToList();
@@ -191,4 +200,9 @@ public static class Extensions
                     return i;
                 })
                .TakeWhile(i => !doUntil(i));
+
+    public static (T, T) Take2<T>(this IEnumerable<T> items)
+    {
+        return (items.First(), items.Skip(1).First());
+    }
 }
