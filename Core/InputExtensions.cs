@@ -24,7 +24,7 @@ public static class InputExtensions
         return source.Select(s => s.Parse<TTo>().ToArray());
     }
 
-    public static IEnumerable<(T X, T Y)> Pairwise<T>(this IEnumerable<T[]> source)
+    public static IEnumerable<(T X, T Y)> Zip2<T>(this IEnumerable<T[]> source)
     {
         return source.Select(s => (s[0], s[1]));
     }

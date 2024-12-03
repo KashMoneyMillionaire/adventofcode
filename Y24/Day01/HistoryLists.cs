@@ -10,7 +10,7 @@ public class HistoryLists : IDaySolver
         return input.EachLine()
                     .Split(' ')
                     .Parse<int>()
-                    .Pairwise()
+                    .Zip2()
                     .Sorted()
                     .Select((x, y) => Math.Abs(x - y))
                     .Sum();
@@ -21,7 +21,7 @@ public class HistoryLists : IDaySolver
         var (left, right) = input.EachLine()
                                  .Split(' ')
                                  .Parse<int>()
-                                 .Pairwise()
+                                 .Zip2()
                                  .Sorted()
                                  .BreakApart();
         
