@@ -30,6 +30,6 @@ public static class LoggingExtensions
         {
             $"{i+1}: {mapper(s)}".Debug();
             return s;
-        });
+        }).ToList();
     }
 }
