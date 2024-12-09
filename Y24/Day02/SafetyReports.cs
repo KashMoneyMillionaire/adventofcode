@@ -10,7 +10,7 @@ public class SafetyReports : IDaySolver
     {
         var answer = input.EachLine()
                           .Parse<Report>()
-                          .Where(r => r.IsSafe)
+                          .Where(r => r.IsSafe(0))
                           .Count();
 
         return answer;
@@ -18,9 +18,9 @@ public class SafetyReports : IDaySolver
 
     public static object SolvePart2(string input)
     {
-        var answer = input.EachLine()
-                          .Parse<Report>()
-                          .Where(r => r.IsSafe)
+        var answer = input.EachLine(row: 100)
+                          .Parse<Report>().DebugUs(r => r.Debug(1))
+                          .Where(r => r.IsSafe(1))
                           .Count();
 
         return answer;
@@ -29,15 +29,30 @@ public class SafetyReports : IDaySolver
 
 public record Report(List<int> Levels) : IParsable<Report>
 {
-    public bool IsSafe => IsGraduallyDecreasing || IsGraduallyIncreasing;
+    public string Debug(int numMistakesAllowed) 
+        => $"{ListsToAsses(numMistakesAllowed).Select(l => l.Join(", ")).Join("\n   ")}";
 
-    public bool IsGraduallyIncreasing 
-        => Levels.Pairwise()
-                 .All(i => i.DebugMe().Prev < i.Curr && Math.Abs(i.Prev - i.Curr).IsBetween(1, 3));
+    public bool IsSafe(int numMistakesAllowed)
+    {
+        var lists = ListsToAsses(numMistakesAllowed);
 
-    public bool IsGraduallyDecreasing 
-        => Levels.Pairwise()
-                 .All(i => i.Prev > i.Curr && Math.Abs(i.Prev - i.Curr).IsBetween(1, 3));
+        return lists.Any(l => l.IsOrdered()
+                              && l.Pairwise().All((pair) => Math.Abs(pair.Prev - pair.Curr).IsBetween(1, 3)));
+    }
+
+    public List<List<int>> ListsToAsses(int numMistakesAllowed)
+    {
+        if (numMistakesAllowed == 0)
+            return [Levels];
+
+        if (numMistakesAllowed > 1)
+            throw new NotImplementedException("🤷");
+
+        var sizes = Levels.Count - numMistakesAllowed;
+        return Levels.Iterate(0, Levels.Count)
+                     .Select(x => x.Item.WithoutIndex(x.Idx).ToList())
+                     .ToList();
+    }
 
     public static Report Parse(string s, IFormatProvider? provider)
     {

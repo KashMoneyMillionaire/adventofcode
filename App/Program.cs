@@ -50,7 +50,7 @@ string Solve(PuzzleDay puzzleDay, string input)
     }
     catch (Exception e)
     {
-        Console.WriteLine(e);
+        Console.WriteLine(e.InnerException); // Outer is always reflection and boring
         return "Error";
     }
 }

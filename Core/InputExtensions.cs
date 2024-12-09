@@ -4,9 +4,14 @@ public static class InputExtensions
 {
     public static bool IsDebug => Extensions.IsDebug;
 
-    public static IEnumerable<string> EachLine(this string input) 
+    public static IEnumerable<string> EachLine(this string input, int? row = null, int? skip = null, int? take = null) 
     {
-        return input.Split('\n');
+        var split = input.Split('\n');
+
+        if (row is {} idx)
+            return split[idx-1].AsList();
+
+        return split.Skip(skip ?? 0).TakeIfNotNull(take ?? split.Length);
     }
 
     public static IEnumerable<string[]> Split(this IEnumerable<string> source, char splitOn) 

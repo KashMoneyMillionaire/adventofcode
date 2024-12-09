@@ -26,9 +26,9 @@ public static class LoggingExtensions
     {
         $"Looking at collection: {expr}".Debug();
 
-        return source.Select(s => 
+        return source.Select((s, i) => 
         {
-            mapper(s).Debug();
+            $"{i+1}: {mapper(s)}".Debug();
             return s;
         });
     }
