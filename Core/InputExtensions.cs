@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace Core;
 
 public static class InputExtensions 
@@ -22,6 +24,11 @@ public static class InputExtensions
     public static IEnumerable<TTo> Parse<TTo>(this IEnumerable<string> source) where TTo : IParsable<TTo>
     {
         return source.Select(s => s.Parse<TTo>());
+    }
+
+    public static IEnumerable<TTo> Parse<TTo>(this MatchCollection source) where TTo : IRegexParsable<TTo>
+    {
+        return source.Select(TTo.Parse);
     }
 
     public static IEnumerable<TTo[]> Parse<TTo>(this IEnumerable<string[]> source) where TTo : IParsable<TTo>
