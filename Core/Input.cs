@@ -15,8 +15,15 @@ public class Input
     {
         _initialValue = value;
 
+        var eofReached = false;
+
         Lines = value.ReplaceLineEndings()
                      .Split(splitOn ?? Environment.NewLine)
+                     .Where(l =>
+                     {
+                        if (l == "EOF") eofReached = true;
+                        return !eofReached;
+                     })
                      .Where(l => !skipEmptyLines || !string.IsNullOrWhiteSpace(l))
                      .Where(l => !l.StartsWith('#'))
                      .Take(take)
