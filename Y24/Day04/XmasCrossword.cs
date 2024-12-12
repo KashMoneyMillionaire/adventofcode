@@ -19,6 +19,19 @@ public class XmasCrossword : IDaySolver
 
     public static object SolvePart2(string input)
     {
-        return input;
+        var matrix = input.AsInput()
+                          .ToMatrix();
+
+        char[][] search = [
+            ['M', '.', 'S'],
+            ['.', 'A', '.'],
+            ['M', '.', 'S']
+        ];
+
+        return matrix.Search(search)
+                     .DebugUs()
+                     .Count()
+                    //  .DebugMe()
+                     ;
     }
 }

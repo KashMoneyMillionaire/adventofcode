@@ -158,7 +158,7 @@ public static class MatrixExtensions
                     }
 
                     if (word.ToString() == reverseSearch)
-                        yield return new(col+3, row+3, SearchDirections.ReverseDiagonalUp);
+                        yield return new(col + 3, row + 3, SearchDirections.ReverseDiagonalUp);
                 }
             }
         }
@@ -176,13 +176,60 @@ public static class MatrixExtensions
                     }
 
                     if (word.ToString() == reverseSearch)
-                        yield return new(col+3, row-3, SearchDirections.ReverseDiagonalDown);
+                        yield return new(col + 3, row - 3, SearchDirections.ReverseDiagonalDown);
                 }
             }
         }
 
     }
 
+    public static IEnumerable<SearchResult> Search(this char[][] matrix, char[][] search)
+    {
+        var searches = search.Iterate(0, 4)
+                             .Select((s) => s.Item.Do(s.Idx, m => m.Rotate90Degrees()))
+                             .ToList();
+
+        // For each of our search terms, we have to search
+        for (int searchIdx = 0; searchIdx < searches.Count; searchIdx++)
+        {
+            var thisSearch = searches[searchIdx];
+            thisSearch.AsString().Debug();
+
+            // We search by iterating over the search space
+            for (int row = 0; row <= matrix.Length - thisSearch.Length; row++)
+                for (int col = 0; col <= matrix[row].Length - thisSearch[0].Length; col++)
+                {
+                    // Now we scan the current search matrix
+                    var match = true;
+                    for (int sRow = 0; sRow < thisSearch.Length && match; sRow++)
+                        for (int sCol = 0; sCol < thisSearch[sRow].Length && match; sCol++)
+                        {
+                            var x = row + sRow;
+                            var y = col + sCol;
+                            if (thisSearch[sRow][sCol] == '.')
+                            {
+                                $"Skipping [{x},{y}]={matrix[x][y]}".Debug();
+                                continue;
+                            }
+
+                            if (matrix[x][y] != thisSearch[sRow][sCol])
+                            {
+                                $"Bad character matrix[{x},{y}]={matrix[x][y]}, thisSearch[{sRow},{sCol}]={thisSearch[sRow][sCol]}".Debug();
+                                match = false;
+                            }
+                        }
+
+                    if (match)
+                        yield return new(col, row, SearchDirections.All);
+                }
+        }
+
+    }
+
+    public static string AsString(this char[][] matrix)
+    {
+        return matrix.Select(m => m.Join("")).Join("\n");
+    }
 }
 
 public record SearchResult(int X, int Y, SearchDirections Direction);

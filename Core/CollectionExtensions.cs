@@ -62,4 +62,14 @@ public static class CollectionExtensions
     }
 
     public static List<T> AsList<T>(this T value) => [value];
+
+    public static T Do<T>(this T value, int numOfTimes, Func<T, T> thingToDo)
+    {
+        for (int i = 0; i < numOfTimes; i++)
+        {
+            value = thingToDo(value);
+        }
+
+        return value;
+    }
 }
