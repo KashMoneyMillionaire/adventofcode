@@ -1,8 +1,9 @@
+using System;
 using System.Text.RegularExpressions;
 
 namespace Core;
 
-public static class InputExtensions 
+public static partial class InputExtensions 
 {
     public static bool IsDebug => Extensions.IsDebug;
 
@@ -57,4 +58,5 @@ public static class InputExtensions
     {
         return (source.Select(s => s.X), source.Select(s => s.Y));
     }
+    
 }

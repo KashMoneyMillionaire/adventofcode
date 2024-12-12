@@ -28,12 +28,12 @@ internal static class DayGenerator
     {
         public static object SolvePart1(string input)
         {
-            throw new NotImplementedException();
+            return input;
         }
 
         public static object SolvePart2(string input)
         {
-            throw new NotImplementedException();
+            return input;
         }
     }
     

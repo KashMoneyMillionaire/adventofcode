@@ -16,18 +16,6 @@ public static class Extensions
 
     public static void Print(this string value) => Console.WriteLine(value);
 
-    public static IEnumerable<string> ReadLines(
-        this string input,
-        bool skipEmptyLines = true,
-        string? splitOn = null,
-        int take = int.MaxValue
-    )
-        => input.ReplaceLineEndings()
-                .Split(splitOn ?? Environment.NewLine)
-                .Where(l => !skipEmptyLines || !string.IsNullOrWhiteSpace(l))
-                .Where(l => !l.StartsWith("#"))
-                .Take(take);
-
     public static IEnumerable<T> Log<T>(this IEnumerable<T> item, string? message = null)
     {
         if (!IsDebug)
@@ -147,21 +135,6 @@ public static class Extensions
             if (numTimes-- <= 0) return item;
             item = doThis(item);
         }
-    }
-
-    public static T[][] AsMatrix<T>(this string input, Func<string, int, int, T[][], T> transform)
-    {
-        var rows = input.ReadLines().ToList();
-        var enumerable = rows.SelectMany((l, y) => l.Select((c, x) => (c, x, y)));
-
-        var forest = new T[rows.Count][];
-        foreach (var cell in enumerable)
-        {
-            forest[cell.x] ??= new T[rows[0].Length];
-            forest[cell.x][cell.y] = transform(cell.c.ToString(), cell.x, cell.y, forest);
-        }
-
-        return forest;
     }
 
     public static bool IsAdjacent(this (int x, int y) head, (int x, int y) tail)
